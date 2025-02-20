@@ -1,7 +1,5 @@
-Queue = {}
-Queue.Ready = false
-Queue.Exports = nil
-Queue.ReadyCbs = {}
+Queue, Queue.ReadyCbs = {}, {}
+Queue.Ready, Queue.Exports = false, nil
 Queue.CurResource = GetCurrentResourceName()
 
 if Queue.CurResource == "connectqueue" then return end
@@ -47,7 +45,7 @@ end
 AddEventHandler("onResourceStart", function(resource)
     if resource == "connectqueue" then
         while GetResourceState(resource) ~= "started" do Citizen.Wait(0) end
-        Citizen.Wait(1)
+        Wait(1)
         Queue.LoadExports()
     end
 end)
