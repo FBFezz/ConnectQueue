@@ -1,7 +1,7 @@
 if not IsDuplicityVersion() then
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while true do
-            Citizen.Wait(0)
+            Wait(0)
             if NetworkIsSessionStarted() then
                 TriggerServerEvent("Queue:playerActivated")
                 return
@@ -422,7 +422,7 @@ function Queue:CanJoin(src, cb)
             await = false
         end)
 
-        while await do Citizen.Wait(0) end
+        while await do Wait(0) end
 
         if not allow then return end
     end
@@ -450,15 +450,15 @@ local function playerConnect(name, setKickReason, deferrals)
 
     deferrals.defer()
 
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while connecting do
-            Citizen.Wait(100)
+            Wait(100)
             if not connecting then return end
             deferrals.update(Config.Language.connecting)
         end
     end)
 
-    Citizen.Wait(500)
+    Wait(500)
 
     local function done(msg, _deferrals)
         connecting = false
@@ -467,7 +467,7 @@ local function playerConnect(name, setKickReason, deferrals)
 
         if msg then deferrals.update(tostring(msg) or "") end
 
-        Citizen.Wait(500)
+        Wait(500)
 
         if not msg then
             deferrals.done()
@@ -520,7 +520,7 @@ local function playerConnect(name, setKickReason, deferrals)
         allow = true
     end) 
 
-    while allow == nil do Citizen.Wait(0) end
+    while allow == nil do Wait(0) end
     if not allow then return end
 
     if Config.PriorityOnly and not Queue:IsPriority(ids) then done(Config.Language.wlonly) return end
@@ -588,7 +588,7 @@ local function playerConnect(name, setKickReason, deferrals)
     if rejoined then return end
 
     while true do
-        Citizen.Wait(500)
+        Wait(500)
 
         local pos, data = Queue:IsInQueue(ids, true)
 
@@ -626,7 +626,7 @@ local function playerConnect(name, setKickReason, deferrals)
             local added = Queue:AddToConnecting(ids)
 
             update(Config.Language.joining, data.deferrals)
-            Citizen.Wait(500)
+            Wait(500)
 
             if not added then
                 done(Config.Language.connectingerr)
@@ -652,7 +652,7 @@ local function playerConnect(name, setKickReason, deferrals)
 end
 AddEventHandler("playerConnecting", playerConnect)
 
-Citizen.CreateThread(function()
+CreateThread(function()
     local function remove(data, pos, msg)
         if data and data.source then
             Queue:RemoveFromQueue(data.source, true)
@@ -663,7 +663,7 @@ Citizen.CreateThread(function()
     end
 
     while true do
-        Citizen.Wait(1000)
+        Wait(1000)
     
         local i = 1
     
